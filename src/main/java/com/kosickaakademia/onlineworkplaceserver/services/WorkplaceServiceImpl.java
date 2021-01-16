@@ -1,12 +1,14 @@
 package com.kosickaakademia.onlineworkplaceserver.services;
 
-import com.kosickaakademia.onlineworkplaceserver.entities.UserEntity;
+import com.kosickaakademia.onlineworkplaceserver.entities.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.entities.WorkplaceEntity;
 import com.kosickaakademia.onlineworkplaceserver.repositories.UserRepository;
 import com.kosickaakademia.onlineworkplaceserver.repositories.WorkplaceRepository;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkplaceServiceImpl implements WorkplaceService {
@@ -24,20 +26,30 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     }
 
     @Override
-    public void addWorkplace(WorkplaceEntity workplaceEntity) {
-        workplaceRepository.save(workplaceEntity);
-    }
-
-    @Override
-    public void deleteWorkplace() {
-
+    public WorkplaceEntity addWorkplace(WorkplaceEntity workplaceEntity) {
+        return workplaceRepository.save(workplaceEntity);
     }
 
     @Override
     public void addUserToWorkplace(Long userId, Long workplaceId) {
-        UserEntity user = userRepository.findUserEntityById(userId);
-        WorkplaceEntity workplace = workplaceRepository.getWorkplaceEntityById(workplaceId);
+        val user = userRepository.findUserEntityById(userId);
+        val workplace = workplaceRepository.getWorkplaceEntityById(workplaceId);
         user.getUserWorkplaces().add(workplace);
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers(Long workplaceId) {
+        return workplaceRepository.getWorkplaceEntityById(workplaceId).getWorkplaceUsers()
+                .stream()
+                .map(u -> new UserDTO(u.getId(), u.getName(), u.getSurname(), u.getEmail()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteUser(Long userId, Long workplaceId) {
+        val user = userRepository.findUserEntityById(userId);
+        user.getUserWorkplaces().removeIf(workplaceEntity -> workplaceEntity.getId().equals(workplaceId));
         userRepository.save(user);
     }
 }

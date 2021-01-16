@@ -1,5 +1,6 @@
 package com.kosickaakademia.onlineworkplaceserver.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public  class UserEntity {
     private String email;
     private String password;
 
+    @JsonBackReference
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "workplace_user",
