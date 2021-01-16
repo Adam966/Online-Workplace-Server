@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.kosickaakademia.onlineworkplaceserver.entities.UserEntity;
-import com.kosickaakademia.onlineworkplaceserver.entities.UserResponseEntity;
+import com.kosickaakademia.onlineworkplaceserver.entities.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.repositories.UserRepository;
 import lombok.val;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,15 +52,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }    }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         String token = JWT.create()
                 .withSubject(((User) authResult.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
 
         val user = userRepository.findUserEntityByEmail(((User) authResult.getPrincipal()).getUsername());
-        val userResponseEntity = new UserResponseEntity();
-        userResponseEntity.email(user.getEmail()).userName(user.getUserName()).userSurname(user.getUserSurname()).id(user.getId());
+        val userResponseEntity = new UserDTO(
+                user.getId(),
+                user.getName(),
+                user.getSurname(),
+                user.getEmail()
+        );
 
         val gson = new Gson();
         val json = gson.toJson(userResponseEntity);

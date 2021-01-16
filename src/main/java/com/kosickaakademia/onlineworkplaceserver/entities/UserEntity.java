@@ -1,8 +1,10 @@
 package com.kosickaakademia.onlineworkplaceserver.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -12,8 +14,17 @@ public  class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userName;
-    private String userSurname;
+    private String name;
+    private String surname;
     private String email;
     private String password;
+
+    @JsonBackReference
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "workplace_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "workplace_id")
+    )
+    private List<WorkplaceEntity> userWorkplaces;
 }
