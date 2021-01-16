@@ -22,8 +22,8 @@ public class LabelEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(
             name = "workplace_label",
-            joinColumns = @JoinColumn(name = "workplace_id"),
-            inverseJoinColumns = @JoinColumn(name = "label_id")
+            joinColumns = @JoinColumn(name = "label_id"),
+            inverseJoinColumns = @JoinColumn(name = "workplace_id")
     )
     private WorkplaceEntity workplaceEntity;
 }
