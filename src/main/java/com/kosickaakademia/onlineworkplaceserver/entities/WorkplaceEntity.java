@@ -22,4 +22,7 @@ public class WorkplaceEntity {
     @JsonBackReference
     @ManyToMany(mappedBy = "userWorkplaces", targetEntity = UserEntity.class, cascade = CascadeType.ALL)
     private List<UserEntity> workplaceUsers;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workplaceEntity")
+    private List<LabelEntity> workplaceLabels;
 }

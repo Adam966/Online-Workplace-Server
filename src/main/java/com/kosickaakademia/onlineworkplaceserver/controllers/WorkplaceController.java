@@ -1,5 +1,6 @@
 package com.kosickaakademia.onlineworkplaceserver.controllers;
 
+import com.kosickaakademia.onlineworkplaceserver.entities.LabelEntity;
 import com.kosickaakademia.onlineworkplaceserver.entities.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.entities.WorkplaceEntity;
 import com.kosickaakademia.onlineworkplaceserver.services.WorkplaceServiceImpl;
@@ -12,9 +13,14 @@ import java.util.List;
 public class WorkplaceController {
     private static final String WORKPLACE = "/workplace";
     private static final String WORKPLACES = "/workplaces";
-    private static final String ADD_USER = "workplace/{workplaceId}/user/{userId}";
-    private static final String GET_WORKPLACE_USERS = "workplace/{workplaceId}/users";
+
+    private static final String ADD_WORKPLACE_USER = "workplace/{workplaceId}/user";
     private static final String DELETE_WORKPLACE_USER = "workplace/{workplaceId}/user/{userId}";
+    private static final String GET_WORKPLACE_USERS = "workplace/{workplaceId}/users";
+
+    private static final String ADD_WORKPLACE_LABEL = "workplace/{workplaceId}/label";
+    private static final String DELETE_WORKPLACE_LABEL = "workplace/{workplaceId}/label/{labelId}";
+    private static final String GET_WORKPLACE_LABELS = "workplace/{workplaceId}/labels";
 
     private final WorkplaceServiceImpl workplaceService;
 
@@ -37,7 +43,7 @@ public class WorkplaceController {
         workplaceService.deleteUser(userId, workplaceId);
     }
 
-    @PostMapping(ADD_USER)
+    @PostMapping(ADD_WORKPLACE_USER)
     void addUserToWorkplace(@PathVariable Long workplaceId, @PathVariable Long userId) {
         workplaceService.addUserToWorkplace(userId, workplaceId);
     }
@@ -45,5 +51,20 @@ public class WorkplaceController {
     @GetMapping(GET_WORKPLACE_USERS)
     ResponseEntity<List<UserDTO>> getAllWorkplaceUsers(@PathVariable Long workplaceId) {
         return ResponseEntity.ok(workplaceService.getAllUsers(workplaceId));
+    }
+
+    @GetMapping(GET_WORKPLACE_LABELS)
+    ResponseEntity<List<LabelEntity>> getAllWorkplaceLabels(@PathVariable Long workplaceId) {
+        return ResponseEntity.ok(workplaceService.getAllLabels(workplaceId));
+    }
+
+    @PostMapping(ADD_WORKPLACE_LABEL)
+    ResponseEntity<LabelEntity> addLabelToWorkplace(@RequestBody LabelEntity labelEntity, @PathVariable Long workplaceId) {
+        return ResponseEntity.ok(workplaceService.addLabel(labelEntity, workplaceId));
+    }
+
+    @DeleteMapping(DELETE_WORKPLACE_LABEL)
+    void deleteLabelFromWorkplace(@PathVariable Long workplaceId, @PathVariable Long labelId) {
+        workplaceService.deleteLabel(workplaceId, labelId);
     }
 }
