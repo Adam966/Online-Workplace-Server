@@ -1,8 +1,8 @@
-package com.kosickaakademia.onlineworkplaceserver.entities;
+package com.kosickaakademia.onlineworkplaceserver.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.experimental.Accessors;
+
 
 @Data
 @AllArgsConstructor

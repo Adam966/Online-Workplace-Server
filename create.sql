@@ -1,10 +1,16 @@
-create table label (id bigint not null auto_increment, color varchar(255), name varchar(255), primary key (id)) engine=InnoDB
-create table user (id bigint not null auto_increment, email varchar(255), name varchar(255), password varchar(255), surname varchar(255), primary key (id)) engine=InnoDB
-create table workplace (id bigint not null auto_increment, admin_id bigint, background_color varchar(255), description varchar(255), name varchar(255), primary key (id)) engine=InnoDB
-create table workplace_label (workplace_id bigint, label_id bigint not null, primary key (label_id)) engine=InnoDB
-create table workplace_user (user_id bigint not null, workplace_id bigint not null) engine=InnoDB
-alter table workplace_label add constraint FK6898e4d2034vjucqsh5lrjpx4 foreign key (workplace_id) references workplace (id)
-alter table workplace_label add constraint FK3f9edq9uqvoypsjlntf2extij foreign key (label_id) references label (id)
-alter table workplace_user add constraint FKm9h888v8tm2juhlirbrd7eqhx foreign key (workplace_id) references workplace (id)
-alter table workplace_user add constraint FKgi44hhixynqkd9xxebwnh82rk foreign key (user_id) references user (id)
-
+create table label (id bigint not null auto_increment, color varchar(255), name varchar(255), primary key (id)) engine=InnoDB;
+create table note_label (label_id bigint not null, note_id bigint not null) engine=InnoDB;
+create table note_user (user_id bigint not null, note_id bigint not null) engine=InnoDB;
+create table note_entity (id bigint not null auto_increment, description varchar(255), due_date datetime(6), name varchar(255), primary key (id)) engine=InnoDB;
+create table user (id bigint not null auto_increment, email varchar(255), name varchar(255), password varchar(255), surname varchar(255), primary key (id)) engine=InnoDB;
+create table workplace (id bigint not null auto_increment, admin_id bigint, background_color varchar(255), description varchar(255), name varchar(255), primary key (id)) engine=InnoDB;
+create table workplace_label (workplace_id bigint, label_id bigint not null, primary key (label_id)) engine=InnoDB;
+create table workplace_user (user_id bigint not null, workplace_id bigint not null) engine=InnoDB;
+alter table note_label add constraint FKs4d9ly0rm9s640kthqsn19qch foreign key (note_id) references label (id);
+alter table note_label add constraint FKjo6mwyfyxui9t95rwytqqtat foreign key (label_id) references note_entity (id);
+alter table note_user add constraint FKdswq8f647nhbhsavo1x24smh6 foreign key (note_id) references user (id);
+alter table note_user add constraint FKkxot5ab5kp0rtnj9ot57xgpr7 foreign key (user_id) references note_entity (id);
+alter table workplace_label add constraint FK6898e4d2034vjucqsh5lrjpx4 foreign key (workplace_id) references workplace (id);
+alter table workplace_label add constraint FK3f9edq9uqvoypsjlntf2extij foreign key (label_id) references label (id);
+alter table workplace_user add constraint FKm9h888v8tm2juhlirbrd7eqhx foreign key (workplace_id) references workplace (id);
+alter table workplace_user add constraint FKgi44hhixynqkd9xxebwnh82rk foreign key (user_id) references user (id);
