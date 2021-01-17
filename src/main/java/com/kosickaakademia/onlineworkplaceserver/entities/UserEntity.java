@@ -16,7 +16,10 @@ public  class UserEntity {
 
     private String name;
     private String surname;
+
+    @Column(unique = true)
     private String email;
+
     private String password;
 
     @JsonBackReference

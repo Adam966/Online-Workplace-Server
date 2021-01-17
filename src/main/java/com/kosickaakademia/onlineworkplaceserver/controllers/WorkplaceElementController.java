@@ -1,8 +1,6 @@
 package com.kosickaakademia.onlineworkplaceserver.controllers;
 
-import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.NoteEntity;
 import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.WorkplaceElementEntity;
-import com.kosickaakademia.onlineworkplaceserver.services.WorkplaceElementService;
 import com.kosickaakademia.onlineworkplaceserver.services.WorkplaceElementServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
