@@ -7,20 +7,25 @@ import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.Workp
 import com.kosickaakademia.onlineworkplaceserver.repositories.CheckListRepository;
 import com.kosickaakademia.onlineworkplaceserver.repositories.NoteRepository;
 import com.kosickaakademia.onlineworkplaceserver.repositories.ThreadRepository;
+import com.kosickaakademia.onlineworkplaceserver.repositories.UserRepository;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkplaceElementServiceImpl implements WorkplaceElementService {
     private final NoteRepository noteRepository;
     private final ThreadRepository threadRepository;
     private final CheckListRepository checkListRepository;
+    private final UserRepository userRepository;
 
-    public WorkplaceElementServiceImpl(NoteRepository noteRepository, ThreadRepository threadRepository, CheckListRepository checkListRepository) {
+    public WorkplaceElementServiceImpl(NoteRepository noteRepository, ThreadRepository threadRepository, CheckListRepository checkListRepository, UserRepository userRepository) {
         this.noteRepository = noteRepository;
         this.threadRepository = threadRepository;
         this.checkListRepository = checkListRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -31,6 +36,11 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
     @Override
     public WorkplaceElementEntity addElement(WorkplaceElementEntity workplaceElementEntity) {
         if (workplaceElementEntity instanceof NoteEntity) {
+
+            val users = ((NoteEntity) workplaceElementEntity).getAssignedUsers().stream().map(userEntity ->
+                    userRepository.findUserEntityById(userEntity.getId())).collect(Collectors.toList());
+            ((NoteEntity) workplaceElementEntity).getAssignedUsers().clear();
+            ((NoteEntity) workplaceElementEntity).getAssignedUsers().addAll(users);
             System.out.println("INSTANCE OF NOTE ENTITY");
             return noteRepository.save((NoteEntity) workplaceElementEntity);
         }

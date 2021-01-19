@@ -14,7 +14,7 @@ public class WorkplaceController {
     private static final String WORKPLACE = "workplace";
     private static final String WORKPLACES = "workplaces";
 
-    private static final String ADD_WORKPLACE_USER = "workplace/{workplaceId}/user";
+    private static final String ADD_WORKPLACE_USER = "workplace/{workplaceId}/user/{userId}";
     private static final String DELETE_WORKPLACE_USER = "workplace/{workplaceId}/user/{userId}";
     private static final String GET_WORKPLACE_USERS = "workplace/{workplaceId}/users";
 
