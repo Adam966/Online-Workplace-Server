@@ -52,11 +52,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
-        String token = JWT.create()
-                .withSubject(((User) authResult.getPrincipal()).getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .sign(HMAC512(SECRET.getBytes()));
-
         val user = userRepository.findUserEntityByEmail(((User) authResult.getPrincipal()).getUsername());
         val userResponseEntity = new UserDTO(
                 user.getId(),
@@ -64,6 +59,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 user.getSurname(),
                 user.getEmail()
         );
+
+        String token = JWT.create()
+                .withSubject(user.getId().toString())
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .sign(HMAC512(SECRET.getBytes()));
 
         val gson = new Gson();
         val json = gson.toJson(userResponseEntity);
