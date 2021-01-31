@@ -6,6 +6,7 @@ import com.kosickaakademia.onlineworkplaceserver.entities.WorkplaceEntity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @MappedSuperclass
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
@@ -24,4 +25,6 @@ public abstract class WorkplaceElementEntity {
     protected WorkplaceEntity workplaceEntity;
 
     protected String name;
+    protected Date creationTime;
+    protected boolean isArchived;
 }

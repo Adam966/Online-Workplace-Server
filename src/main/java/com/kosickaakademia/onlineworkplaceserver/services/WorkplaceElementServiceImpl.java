@@ -11,6 +11,7 @@ import com.kosickaakademia.onlineworkplaceserver.repositories.UserRepository;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,15 +31,22 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
 
     @Override
     public List<WorkplaceElementEntity> getAllElements(Long workplaceId) {
-        return null;
+        List<WorkplaceElementEntity> list = new ArrayList<>();
+        list.addAll(noteRepository.getAllByWorkplaceEntityIdAndArchivedLike(workplaceId, true));
+        list.addAll(threadRepository.getAllByWorkplaceEntityIdAndArchivedLike(workplaceId, true));
+        list.addAll(checkListRepository.getAllByWorkplaceEntityIdAndArchivedLike(workplaceId, true));
+        return list;
     }
 
     @Override
     public WorkplaceElementEntity addElement(WorkplaceElementEntity workplaceElementEntity) {
         if (workplaceElementEntity instanceof NoteEntity) {
 
-            val users = ((NoteEntity) workplaceElementEntity).getAssignedUsers().stream().map(userEntity ->
-                    userRepository.findUserEntityById(userEntity.getId())).collect(Collectors.toList());
+            val users = ((NoteEntity) workplaceElementEntity).getAssignedUsers()
+                    .stream()
+                    .map(userEntity -> userRepository.findUserEntityById(userEntity.getId()))
+                    .collect(Collectors.toList());
+
             ((NoteEntity) workplaceElementEntity).getAssignedUsers().clear();
             ((NoteEntity) workplaceElementEntity).getAssignedUsers().addAll(users);
             System.out.println("INSTANCE OF NOTE ENTITY");
@@ -56,12 +64,12 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
     }
 
     @Override
-    public void updateElement(WorkplaceElementEntity elementEntity) {
+    public void archiveElement(Long elementId, WorkplaceElementEntity workplaceElementEntity) {
 
     }
 
     @Override
-    public void archiveElement(Long elementId) {
-
+    public List<WorkplaceElementEntity> getAllArchivedElements(Long workplaceId) {
+        return null;
     }
 }

@@ -7,6 +7,6 @@ import java.util.List;
 public interface WorkplaceElementService {
     List<WorkplaceElementEntity> getAllElements(Long workplaceId);
     WorkplaceElementEntity addElement(WorkplaceElementEntity workplaceElementEntity);
-    void updateElement(WorkplaceElementEntity elementEntity);
-    void archiveElement(Long elementId);
+    void archiveElement(Long workplaceId, WorkplaceElementEntity workplaceElementEntity);
+    List<WorkplaceElementEntity> getAllArchivedElements(Long workplaceId);
 }
