@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.kosickaakademia.onlineworkplaceserver.entities.UserEntity;
-import com.kosickaakademia.onlineworkplaceserver.entities.UserDTO;
+import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.repositories.UserRepository;
 import lombok.val;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -53,11 +52,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
-        String token = JWT.create()
-                .withSubject(((User) authResult.getPrincipal()).getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .sign(HMAC512(SECRET.getBytes()));
-
         val user = userRepository.findUserEntityByEmail(((User) authResult.getPrincipal()).getUsername());
         val userResponseEntity = new UserDTO(
                 user.getId(),
@@ -65,6 +59,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 user.getSurname(),
                 user.getEmail()
         );
+
+        String token = JWT.create()
+                .withSubject(user.getId().toString())
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .sign(HMAC512(SECRET.getBytes()));
 
         val gson = new Gson();
         val json = gson.toJson(userResponseEntity);

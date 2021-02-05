@@ -1,7 +1,7 @@
 package com.kosickaakademia.onlineworkplaceserver.controllers;
 
 import com.kosickaakademia.onlineworkplaceserver.entities.LabelEntity;
-import com.kosickaakademia.onlineworkplaceserver.entities.UserDTO;
+import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.entities.WorkplaceEntity;
 import com.kosickaakademia.onlineworkplaceserver.services.WorkplaceServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +11,10 @@ import java.util.List;
 
 @RestController()
 public class WorkplaceController {
-    private static final String WORKPLACE = "/workplace";
-    private static final String WORKPLACES = "/workplaces";
+    private static final String WORKPLACE = "workplace";
+    private static final String WORKPLACES = "workplaces";
 
-    private static final String ADD_WORKPLACE_USER = "workplace/{workplaceId}/user";
+    private static final String ADD_WORKPLACE_USER = "workplace/{workplaceId}/user/{userId}";
     private static final String DELETE_WORKPLACE_USER = "workplace/{workplaceId}/user/{userId}";
     private static final String GET_WORKPLACE_USERS = "workplace/{workplaceId}/users";
 

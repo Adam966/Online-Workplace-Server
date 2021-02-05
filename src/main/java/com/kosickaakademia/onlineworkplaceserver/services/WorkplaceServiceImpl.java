@@ -1,7 +1,7 @@
 package com.kosickaakademia.onlineworkplaceserver.services;
 
 import com.kosickaakademia.onlineworkplaceserver.entities.LabelEntity;
-import com.kosickaakademia.onlineworkplaceserver.entities.UserDTO;
+import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.entities.WorkplaceEntity;
 import com.kosickaakademia.onlineworkplaceserver.repositories.LabelRepository;
 import com.kosickaakademia.onlineworkplaceserver.repositories.UserRepository;
