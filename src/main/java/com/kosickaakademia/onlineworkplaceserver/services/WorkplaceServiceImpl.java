@@ -31,7 +31,9 @@ public class WorkplaceServiceImpl implements WorkplaceService {
 
     @Override
     public WorkplaceEntity addWorkplace(WorkplaceEntity workplaceEntity) {
-        return workplaceRepository.save(workplaceEntity);
+        val workplace = workplaceRepository.save(workplaceEntity);
+        addUserToWorkplace(workplace.getAdminId(), workplace.getId());
+        return workplace;
     }
 
     @Override

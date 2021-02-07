@@ -18,6 +18,8 @@ public class WorkplaceEntity {
     private String description;
     private String backgroundColor;
     private Long adminId;
+    private String colorOfElement;
+    private Long photo;
 
     @JsonBackReference
     @ManyToMany(mappedBy = "userWorkplaces", targetEntity = UserEntity.class, cascade = CascadeType.ALL)
