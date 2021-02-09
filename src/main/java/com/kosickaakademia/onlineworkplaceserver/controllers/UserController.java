@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
     private final UserServiceImpl userService;
+    private static final String REGISTER = "register";
 
     public UserController(UserServiceImpl userServiceImpl) {
         this.userService = userServiceImpl;
     }
 
-    @PostMapping("/register")
+    @PostMapping(REGISTER)
     public void registerUser(@RequestBody UserEntity userEntity) {
         try {
             userService.saveUser(userEntity);
