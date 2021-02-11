@@ -23,6 +23,7 @@ public  class UserEntity {
     private String email;
 
     private String password;
+    private Long photo;
 
     @JsonBackReference
     @ManyToMany(cascade = CascadeType.ALL)
