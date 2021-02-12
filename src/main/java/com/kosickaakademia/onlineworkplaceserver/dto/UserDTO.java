@@ -11,4 +11,5 @@ public class UserDTO {
     private String userName;
     private String userSurname;
     private String email;
+    private Long photo;
 }

@@ -57,7 +57,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 user.getId(),
                 user.getName(),
                 user.getSurname(),
-                user.getEmail()
+                user.getEmail(),
+                user.getPhoto()
         );
 
         String token = JWT.create()
