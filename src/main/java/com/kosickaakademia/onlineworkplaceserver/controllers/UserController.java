@@ -1,17 +1,20 @@
 package com.kosickaakademia.onlineworkplaceserver.controllers;
 
+import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.entities.UserEntity;
 import com.kosickaakademia.onlineworkplaceserver.exceptions.UserException;
 import com.kosickaakademia.onlineworkplaceserver.services.UserServiceImpl;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserController {
     private final UserServiceImpl userService;
     private static final String REGISTER = "register";
+    private static final String FIND_USER = "users";
 
     public UserController(UserServiceImpl userServiceImpl) {
         this.userService = userServiceImpl;
@@ -25,4 +28,10 @@ public class UserController {
             throw new UserException();
         }
     }
+
+    @GetMapping(FIND_USER)
+    public ResponseEntity<List<UserDTO>> findUserByName(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getUsersByEmail(email));
+    }
+
 }

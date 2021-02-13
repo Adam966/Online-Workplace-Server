@@ -3,6 +3,7 @@ package com.kosickaakademia.onlineworkplaceserver.controllers;
 import com.kosickaakademia.onlineworkplaceserver.entities.LabelEntity;
 import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.entities.WorkplaceEntity;
+import com.kosickaakademia.onlineworkplaceserver.exceptions.DuplicateUserException;
 import com.kosickaakademia.onlineworkplaceserver.services.WorkplaceServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,11 @@ public class WorkplaceController {
 
     @PostMapping(ADD_WORKPLACE_USER)
     void addUserToWorkplace(@PathVariable Long workplaceId, @PathVariable Long userId) {
-        workplaceService.addUserToWorkplace(userId, workplaceId);
+        try {
+            workplaceService.addUserToWorkplace(userId, workplaceId);
+        } catch (Exception e) {
+            throw new DuplicateUserException();
+        }
     }
 
     @GetMapping(GET_WORKPLACE_USERS)

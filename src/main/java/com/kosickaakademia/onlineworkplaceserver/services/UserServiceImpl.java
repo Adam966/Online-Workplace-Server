@@ -1,5 +1,6 @@
 package com.kosickaakademia.onlineworkplaceserver.services;
 
+import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.entities.UserEntity;
 import com.kosickaakademia.onlineworkplaceserver.repositories.UserRepository;
 import lombok.val;
@@ -11,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -26,6 +29,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void saveUser(UserEntity userEntity) {
         userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
         userRepository.save(userEntity);
+    }
+
+    @Override
+    public List<UserDTO> getUsersByEmail(String name) {
+        return userRepository.findAllByEmailContainingIgnoreCase(name)
+                .stream()
+                .map(u -> new UserDTO(u.getId(), u.getName(), u.getSurname(), u.getEmail(), u.getPhoto()))
+                .collect(Collectors.toList());
     }
 
     @Override

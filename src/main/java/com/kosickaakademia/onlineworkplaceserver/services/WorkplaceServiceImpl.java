@@ -3,6 +3,7 @@ package com.kosickaakademia.onlineworkplaceserver.services;
 import com.kosickaakademia.onlineworkplaceserver.entities.LabelEntity;
 import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.entities.WorkplaceEntity;
+import com.kosickaakademia.onlineworkplaceserver.exceptions.DuplicateUserException;
 import com.kosickaakademia.onlineworkplaceserver.repositories.LabelRepository;
 import com.kosickaakademia.onlineworkplaceserver.repositories.UserRepository;
 import com.kosickaakademia.onlineworkplaceserver.repositories.WorkplaceRepository;
@@ -35,11 +36,16 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     }
 
     @Override
-    public void addUserToWorkplace(Long userId, Long workplaceId) {
+    public void addUserToWorkplace(Long userId, Long workplaceId) throws DuplicateUserException {
         val user = userRepository.findUserEntityById(userId);
         val workplace = workplaceRepository.getWorkplaceEntityById(workplaceId);
-        user.getUserWorkplaces().add(workplace);
-        userRepository.save(user);
+
+        if (!user.getUserWorkplaces().contains(workplace)) {
+            user.getUserWorkplaces().add(workplace);
+            userRepository.save(user);
+        } else {
+            throw new DuplicateUserException();
+        }
     }
 
     @Override
