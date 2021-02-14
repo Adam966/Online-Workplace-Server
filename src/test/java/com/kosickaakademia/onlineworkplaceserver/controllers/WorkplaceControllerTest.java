@@ -54,7 +54,7 @@ class WorkplaceControllerTest {
         workplaceEntity.setDescription("This is test description");
         workplaceEntityList.add(workplaceEntity);
 
-        val user = new UserDTO(1L, "Adam", "Ivan", "adam.ivan@kosickaakademia.sk");
+        val user = new UserDTO(1L, "Adam", "Ivan", "adam.ivan@kosickaakademia.sk", 3L);
         userDTOList = new ArrayList<>();
         userDTOList.add(user);
 
