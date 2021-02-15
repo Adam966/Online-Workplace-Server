@@ -1,6 +1,7 @@
 package com.kosickaakademia.onlineworkplaceserver.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.NoteEntity;
 import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.WorkplaceElementEntity;
 import lombok.Data;
@@ -16,12 +17,11 @@ public  class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String surname;
+    private String userName;
+    private String userSurname;
 
     @Column(unique = true)
     private String email;
-
     private String password;
     private Long photo;
 

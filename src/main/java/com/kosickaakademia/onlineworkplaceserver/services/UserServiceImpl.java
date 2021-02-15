@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<UserDTO> getUsersByEmail(String name) {
         return userRepository.findAllByEmailContainingIgnoreCase(name)
                 .stream()
-                .map(u -> new UserDTO(u.getId(), u.getName(), u.getSurname(), u.getEmail(), u.getPhoto()))
+                .map(u -> new UserDTO(u.getId(), u.getUserName(), u.getUserSurname(), u.getEmail(), u.getPhoto()))
                 .collect(Collectors.toList());
     }
 

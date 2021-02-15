@@ -1,32 +1,28 @@
 package com.kosickaakademia.onlineworkplaceserver.services;
 
-import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.CheckListEntity;
 import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.NoteEntity;
-import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.ThreadEntity;
 import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.WorkplaceElementEntity;
-import com.kosickaakademia.onlineworkplaceserver.repositories.CheckListRepository;
-import com.kosickaakademia.onlineworkplaceserver.repositories.NoteRepository;
-import com.kosickaakademia.onlineworkplaceserver.repositories.ThreadRepository;
-import com.kosickaakademia.onlineworkplaceserver.repositories.UserRepository;
+import com.kosickaakademia.onlineworkplaceserver.repositories.*;
 import lombok.val;
+import org.hibernate.mapping.Collection;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class WorkplaceElementServiceImpl implements WorkplaceElementService {
-    private final NoteRepository noteRepository;
-    private final ThreadRepository threadRepository;
-    private final CheckListRepository checkListRepository;
     private final UserRepository userRepository;
+    private final LabelRepository labelRepository;
+    private final WorkplaceRepository workplaceRepository;
+    private final WorkplaceElementRepository workplaceElementRepository;
 
-    public WorkplaceElementServiceImpl(NoteRepository noteRepository, ThreadRepository threadRepository, CheckListRepository checkListRepository, UserRepository userRepository) {
-        this.noteRepository = noteRepository;
-        this.threadRepository = threadRepository;
-        this.checkListRepository = checkListRepository;
+    public WorkplaceElementServiceImpl(UserRepository userRepository, LabelRepository labelRepository, WorkplaceRepository workplaceRepository, WorkplaceElementRepository workplaceElementRepository) {
         this.userRepository = userRepository;
+        this.labelRepository = labelRepository;
+        this.workplaceRepository = workplaceRepository;
+        this.workplaceElementRepository = workplaceElementRepository;
     }
 
     @Override
@@ -39,28 +35,26 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
     }
 
     @Override
-    public WorkplaceElementEntity addElement(WorkplaceElementEntity workplaceElementEntity) {
-        if (workplaceElementEntity instanceof NoteEntity) {
+    public WorkplaceElementEntity addElement(WorkplaceElementEntity workplaceElementEntity, Long workplaceId) {
+        val workplace = workplaceRepository.getWorkplaceEntityById(workplaceId);
 
-            val users = ((NoteEntity) workplaceElementEntity).getAssignedUsers()
-                    .stream()
-                    .map(userEntity -> userRepository.findUserEntityById(userEntity.getId()))
-                    .collect(Collectors.toList());
+        val users = workplaceElementEntity.getAssignedUsers()
+                .stream().map(userEntity -> userRepository.findUserEntityById(userEntity.getId()))
+                .collect(Collectors.toList());
 
-            ((NoteEntity) workplaceElementEntity).getAssignedUsers().clear();
-            ((NoteEntity) workplaceElementEntity).getAssignedUsers().addAll(users);
-            System.out.println("INSTANCE OF NOTE ENTITY");
-            return noteRepository.save((NoteEntity) workplaceElementEntity);
-        }
-        if (workplaceElementEntity instanceof ThreadEntity) {
-            System.out.println("INSTANCE OF THREAD ENTITY");
-            return threadRepository.save((ThreadEntity) workplaceElementEntity);
-        }
-        if (workplaceElementEntity instanceof CheckListEntity) {
-            System.out.println("INSTANCE OF CHECKLIST ENTITY");
-            return checkListRepository.save((CheckListEntity) workplaceElementEntity);
-        }
-        return null;
+        val labels = workplaceElementEntity.getAssignedLabels()
+                .stream().map(labelEntity -> labelRepository.findLabelEntityById(labelEntity.getId()))
+                .collect(Collectors.toList());
+
+        workplaceElementEntity.setWorkplaceEntity(workplace);
+
+        workplaceElementEntity.getAssignedLabels().clear();
+        workplaceElementEntity.setAssignedLabels(labels);
+
+        workplaceElementEntity.getAssignedUsers().clear();
+        workplaceElementEntity.setAssignedUsers(users);
+
+        return workplaceElementRepository.save(workplaceElementEntity);
     }
 
     @Override

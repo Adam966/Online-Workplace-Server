@@ -18,6 +18,7 @@ public class TaskEntity {
 
     private String description;
     private Date dueDate;
+    private boolean isCompleted;
 
     @JsonBackReference
     @ManyToMany(cascade = CascadeType.ALL)

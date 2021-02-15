@@ -47,7 +47,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public byte[] getWorkplacePhoto(Long workplaceID) {
-        val workplace = workplaceRepository.getOne(workplaceID);
+        val workplace = workplaceRepository.getWorkplaceEntityById(workplaceID);
         return photoRepository.getOne(workplace.getPhoto()).getPicture();
     }
 }
