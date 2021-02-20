@@ -55,8 +55,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         val user = userRepository.findUserEntityByEmail(((User) authResult.getPrincipal()).getUsername());
         val userResponseEntity = new UserDTO(
                 user.getId(),
-                user.getName(),
-                user.getSurname(),
+                user.getUserName(),
+                user.getUserName(),
                 user.getEmail(),
                 user.getPhoto()
         );

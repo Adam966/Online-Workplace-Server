@@ -22,11 +22,7 @@ public class UserController {
 
     @PostMapping(REGISTER)
     public void registerUser(@RequestBody UserEntity userEntity) {
-        try {
-            userService.saveUser(userEntity);
-        } catch (RuntimeException e) {
-            throw new UserException();
-        }
+        userService.saveUser(userEntity);
     }
 
     @GetMapping(FIND_USER)

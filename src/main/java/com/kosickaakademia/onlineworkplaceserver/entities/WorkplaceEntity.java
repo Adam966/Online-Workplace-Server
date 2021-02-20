@@ -10,13 +10,14 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "workplace")
-public class    WorkplaceEntity {
+public class WorkplaceEntity {
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String description;
+    private String colorOfElement;
     private String backgroundColor;
     private Long adminId;
     private Long photo;
@@ -25,6 +26,7 @@ public class    WorkplaceEntity {
     @ManyToMany(mappedBy = "userWorkplaces", targetEntity = UserEntity.class, cascade = CascadeType.ALL)
     private List<UserEntity> workplaceUsers;
 
+    @JsonBackReference(value = "workplaceLabels")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "workplaceEntity")
     private List<LabelEntity> workplaceLabels;
 }

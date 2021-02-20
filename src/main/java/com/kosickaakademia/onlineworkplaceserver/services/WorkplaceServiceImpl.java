@@ -54,7 +54,7 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     public List<UserDTO> getAllUsers(Long workplaceId) {
         return workplaceRepository.getWorkplaceEntityById(workplaceId).getWorkplaceUsers()
                 .stream()
-                .map(u -> new UserDTO(u.getId(), u.getName(), u.getSurname(), u.getEmail(), u.getPhoto()))
+                .map(u -> new UserDTO(u.getId(), u.getUserName(), u.getUserSurname(), u.getEmail(), u.getPhoto()))
                 .collect(Collectors.toList());
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 public class WorkplaceElementController {
     private static final String GET_ALL_WORKPLACE_ELEMENTS = "workplace/{workplaceId}/elements";
-    private static final String WORKPLACE_ELEMENT = "workplace-element";
+    private static final String WORKPLACE_ELEMENT = "workplace/{workplaceId}/element";
     private static final String ARCHIVE_ELEMENT = "workplace/{workplaceId}/archive";
     private static final String GET_ALL_ARCHIVED_ELEMENTS = "workplace/{workplaceId}/archived-elements";
 
@@ -25,9 +25,9 @@ public class WorkplaceElementController {
         return ResponseEntity.ok(workplaceElementService.getAllElements(workplaceId));
     }
 
-    @PostMapping(WORKPLACE_ELEMENT)
-    ResponseEntity<WorkplaceElementEntity> addElementToWorkplace(@RequestBody WorkplaceElementEntity elementEntity) {
-        return ResponseEntity.ok(workplaceElementService.addElement(elementEntity));
+    @PutMapping(WORKPLACE_ELEMENT)
+    ResponseEntity<WorkplaceElementEntity> addElementToWorkplace(@RequestBody WorkplaceElementEntity elementEntity, @PathVariable Long workplaceId) {
+        return ResponseEntity.ok(workplaceElementService.addElement(elementEntity, workplaceId));
     }
 
     @PutMapping(ARCHIVE_ELEMENT)
