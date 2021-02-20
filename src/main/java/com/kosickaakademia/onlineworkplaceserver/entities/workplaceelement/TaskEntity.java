@@ -17,10 +17,8 @@ public class TaskEntity {
     private Long id;
 
     private String description;
-    private Date dueDate;
     private boolean isCompleted;
 
-    @JsonBackReference
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "task_user",

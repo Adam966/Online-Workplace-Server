@@ -1,13 +1,12 @@
 package com.kosickaakademia.onlineworkplaceserver.services;
 
-import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.NoteEntity;
+import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.CheckListEntity;
+import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.TaskEntity;
 import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.WorkplaceElementEntity;
 import com.kosickaakademia.onlineworkplaceserver.repositories.*;
 import lombok.val;
-import org.hibernate.mapping.Collection;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,22 +37,35 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
     public WorkplaceElementEntity addElement(WorkplaceElementEntity workplaceElementEntity, Long workplaceId) {
         val workplace = workplaceRepository.getWorkplaceEntityById(workplaceId);
 
-        val users = workplaceElementEntity.getAssignedUsers()
-                .stream().map(userEntity -> userRepository.findUserEntityById(userEntity.getId()))
-                .collect(Collectors.toList());
+        if(workplaceElementEntity instanceof CheckListEntity) {
+            for (TaskEntity taskEntity: ((CheckListEntity) workplaceElementEntity).getTaskEntities()){
+                val users = taskEntity.getAssignedUsers()
+                        .stream().map(userEntity -> userRepository.findUserEntityById(userEntity.getId()))
+                        .collect(Collectors.toList());
+
+                taskEntity.getAssignedUsers().clear();
+                taskEntity.setAssignedUsers(users);
+            }
+        }
+
+
+        if (workplaceElementEntity.getAssignedUsers() != null) {
+            val users = workplaceElementEntity.getAssignedUsers()
+                    .stream().map(userEntity -> userRepository.findUserEntityById(userEntity.getId()))
+                    .collect(Collectors.toList());
+
+            workplaceElementEntity.getAssignedUsers().clear();
+            workplaceElementEntity.setAssignedUsers(users);
+        }
 
         val labels = workplaceElementEntity.getAssignedLabels()
                 .stream().map(labelEntity -> labelRepository.findLabelEntityById(labelEntity.getId()))
                 .collect(Collectors.toList());
 
-        workplaceElementEntity.setWorkplaceEntity(workplace);
-
         workplaceElementEntity.getAssignedLabels().clear();
         workplaceElementEntity.setAssignedLabels(labels);
 
-        workplaceElementEntity.getAssignedUsers().clear();
-        workplaceElementEntity.setAssignedUsers(users);
-
+        workplaceElementEntity.setWorkplaceEntity(workplace);
         return workplaceElementRepository.save(workplaceElementEntity);
     }
 

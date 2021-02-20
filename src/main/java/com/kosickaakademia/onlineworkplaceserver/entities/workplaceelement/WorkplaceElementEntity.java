@@ -35,8 +35,6 @@ public class WorkplaceElementEntity {
     protected WorkplaceEntity workplaceEntity;
 
     protected String name;
-
-    @CreationTimestamp
     protected Date creationTime;
     protected boolean isArchived;
 
@@ -53,4 +51,14 @@ public class WorkplaceElementEntity {
             joinColumns = @JoinColumn(name = "element_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<UserEntity> assignedUsers;
+
+    @PrePersist
+    protected void onCreate() {
+        creationTime = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        creationTime = new Date();
+    }
 }

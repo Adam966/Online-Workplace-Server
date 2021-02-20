@@ -8,7 +8,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity()
-@DiscriminatorValue("checkList")
+@DiscriminatorValue("checklist")
 @Data
 public class CheckListEntity extends WorkplaceElementEntity {
     public CheckListEntity() {
