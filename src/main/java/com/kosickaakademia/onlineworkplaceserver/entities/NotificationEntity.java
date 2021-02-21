@@ -1,6 +1,7 @@
 package com.kosickaakademia.onlineworkplaceserver.entities;
 
 import com.kosickaakademia.onlineworkplaceserver.enums.NotificationType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -16,6 +17,7 @@ public class NotificationEntity {
 
     private NotificationType type;
     private String description;
+    private boolean fresh;
 
     @CreationTimestamp
     private Date creationTime;
