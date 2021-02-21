@@ -2,6 +2,7 @@ package com.kosickaakademia.onlineworkplaceserver.services;
 
 import com.kosickaakademia.onlineworkplaceserver.dto.NotificationDTO;
 import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
+import com.kosickaakademia.onlineworkplaceserver.entities.NotificationEntity;
 import com.kosickaakademia.onlineworkplaceserver.repositories.NotificationRepository;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -24,15 +25,20 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<NotificationDTO> getNotifications(Long workplaceId, Long userId) {
-        return null;
+        val notifications = notificationRepository
+                .getAllByWorkplaceEntityIdAndRecipientUserId(workplaceId, userId);
+        return mapToNotificationDTO(notifications);
     }
 
     @Override
     public List<NotificationDTO> getNewNotifications(Long workplaceId, Long userId) {
         val notifications = notificationRepository.
                 getAllByFreshTrueAndAndWorkplaceEntityIdAndRecipientUserId(workplaceId, userId);
+        return mapToNotificationDTO(notifications);
+    }
 
-        return notifications.stream()
+    private List<NotificationDTO> mapToNotificationDTO(List<NotificationEntity> list) {
+        return list.stream()
                 .map(notificationEntity -> {
                     return NotificationDTO.builder()
                             .id(notificationEntity.getId())
@@ -52,3 +58,4 @@ public class NotificationServiceImpl implements NotificationService {
                 .collect(Collectors.toList());
     }
 }
+

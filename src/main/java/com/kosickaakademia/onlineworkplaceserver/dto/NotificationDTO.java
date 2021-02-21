@@ -9,7 +9,6 @@ import java.util.Date;
 @Builder
 public class NotificationDTO {
     private Long id;
-
     private NotificationType type;
     private String description;
     private boolean fresh;
