@@ -1,7 +1,7 @@
 package com.kosickaakademia.onlineworkplaceserver.entities;
 
 import com.kosickaakademia.onlineworkplaceserver.enums.NotificationType;
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 

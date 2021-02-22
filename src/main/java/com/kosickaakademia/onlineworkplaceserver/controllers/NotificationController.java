@@ -57,7 +57,7 @@ public class NotificationController {
 
     @GetMapping(GET_NOTIFICATIONS)
     ResponseEntity<List<NotificationDTO>> getAllNotifications(@PathVariable Long userId, @PathVariable Long workplaceId) {
-        return ResponseEntity.ok(notificationService.getNewNotifications(workplaceId, userId));
+        return ResponseEntity.ok(notificationService.getNotifications(workplaceId, userId));
     }
 
     private ArrayList<NotificationDTO> setDummyData() {

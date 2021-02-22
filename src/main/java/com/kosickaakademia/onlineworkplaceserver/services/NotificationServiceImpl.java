@@ -5,6 +5,7 @@ import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.entities.NotificationEntity;
 import com.kosickaakademia.onlineworkplaceserver.repositories.NotificationRepository;
 import lombok.val;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,14 +21,14 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void addNotification(Long workplaceId, Long userId) {
-
     }
 
     @Override
     public List<NotificationDTO> getNotifications(Long workplaceId, Long userId) {
+        val pageRequest = PageRequest.of(0, 5);
         val notifications = notificationRepository
-                .getAllByWorkplaceEntityIdAndRecipientUserId(workplaceId, userId);
-        return mapToNotificationDTO(notifications);
+                .getAllByWorkplaceEntityIdAndRecipientUserId(workplaceId, userId, pageRequest);
+        return mapToNotificationDTO(notifications.toList()  );
     }
 
     @Override
