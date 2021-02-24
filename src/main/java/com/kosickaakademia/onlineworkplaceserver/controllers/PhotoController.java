@@ -10,7 +10,7 @@ import java.io.IOException;
 @RestController
 public class PhotoController {
     private static final String PHOTO_USER = "user-photo/{userId}";
-    private static final String PHOTO_WORKPLACE = "workplace-photo/{workplaceId}";
+    private static final String PHOTO_WORKPLACE = "workplace-photo";
 
 
     private final PhotoServiceImpl photoService;
@@ -30,7 +30,7 @@ public class PhotoController {
     }
 
     @GetMapping(value = PHOTO_WORKPLACE, produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getWorkplacePhoto(@PathVariable Long workplaceId) {
+    public ResponseEntity<byte[]> getWorkplacePhoto(@RequestParam Long workplaceId) {
             return ResponseEntity.ok(photoService.getWorkplacePhoto(workplaceId));
     }
 
