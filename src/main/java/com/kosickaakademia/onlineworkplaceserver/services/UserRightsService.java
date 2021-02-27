@@ -1,9 +1,13 @@
 package com.kosickaakademia.onlineworkplaceserver.services;
 
+import com.kosickaakademia.onlineworkplaceserver.dto.NotificationsRightsDTO;
+import com.kosickaakademia.onlineworkplaceserver.dto.RightsDTO;
 import com.kosickaakademia.onlineworkplaceserver.dto.UserRightsDTO;
+import com.kosickaakademia.onlineworkplaceserver.entities.NotificationRightsEntity;
 import com.kosickaakademia.onlineworkplaceserver.entities.UserRightsEntity;
 
 public interface UserRightsService {
-    UserRightsDTO getUserRights(Long workplaceId, Long userId);
+    RightsDTO getUserRights(Long workplaceId, Long userId);
     UserRightsDTO addUserRights(Long workplaceId, Long userId, UserRightsEntity userRightsDTO);
+    NotificationsRightsDTO addNotificationRights(Long workplaceId, Long userId, NotificationRightsEntity userRightsEntity);
 }
