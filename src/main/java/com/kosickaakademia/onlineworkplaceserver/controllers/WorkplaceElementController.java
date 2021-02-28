@@ -11,7 +11,7 @@ import java.util.List;
 public class WorkplaceElementController {
     private static final String GET_ALL_WORKPLACE_ELEMENTS = "workplace/{workplaceId}/elements";
     private static final String WORKPLACE_ELEMENT = "workplace/{workplaceId}/element";
-    private static final String ARCHIVE_ELEMENT = "workplace/{workplaceId}/archive";
+    private static final String ARCHIVE_ELEMENT = "archive-element/{elementId}";
     private static final String GET_ALL_ARCHIVED_ELEMENTS = "workplace/{workplaceId}/archived-elements";
 
     private final WorkplaceElementServiceImpl workplaceElementService;
@@ -31,8 +31,8 @@ public class WorkplaceElementController {
     }
 
     @PutMapping(ARCHIVE_ELEMENT)
-    void archiveElement(@PathVariable Long workplaceId, @RequestBody WorkplaceElementEntity elementEntity) {
-        workplaceElementService.archiveElement(workplaceId, elementEntity);
+    void archiveElement(@PathVariable Long elementId) {
+        workplaceElementService.archiveElement(elementId);
     }
 
     @GetMapping(GET_ALL_ARCHIVED_ELEMENTS)
