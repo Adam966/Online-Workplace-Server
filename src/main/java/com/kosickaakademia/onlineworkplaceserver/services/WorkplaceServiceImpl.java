@@ -1,12 +1,9 @@
 package com.kosickaakademia.onlineworkplaceserver.services;
 
-import com.kosickaakademia.onlineworkplaceserver.entities.LabelEntity;
+import com.kosickaakademia.onlineworkplaceserver.entities.*;
 import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
-import com.kosickaakademia.onlineworkplaceserver.entities.WorkplaceEntity;
 import com.kosickaakademia.onlineworkplaceserver.exceptions.DuplicateUserException;
-import com.kosickaakademia.onlineworkplaceserver.repositories.LabelRepository;
-import com.kosickaakademia.onlineworkplaceserver.repositories.UserRepository;
-import com.kosickaakademia.onlineworkplaceserver.repositories.WorkplaceRepository;
+import com.kosickaakademia.onlineworkplaceserver.repositories.*;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +15,15 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     private final WorkplaceRepository workplaceRepository;
     private final UserRepository userRepository;
     private final LabelRepository labelRepository;
+    private final UserRightsRepository userRightsRepository;
+    private final NotificationsRightsRepository notificationsRightsRepository;
 
-    public WorkplaceServiceImpl(WorkplaceRepository workplaceRepository, UserRepository userRepository, LabelRepository labelRepository) {
+    public WorkplaceServiceImpl(WorkplaceRepository workplaceRepository, UserRepository userRepository, LabelRepository labelRepository, UserRightsRepository userRightsRepository, NotificationsRightsRepository notificationsRightsRepository) {
         this.workplaceRepository = workplaceRepository;
         this.userRepository = userRepository;
         this.labelRepository = labelRepository;
+        this.userRightsRepository = userRightsRepository;
+        this.notificationsRightsRepository = notificationsRightsRepository;
     }
 
     @Override
@@ -41,6 +42,16 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     public void addUserToWorkplace(Long userId, Long workplaceId) throws DuplicateUserException {
         val user = userRepository.findUserEntityById(userId);
         val workplace = workplaceRepository.getWorkplaceEntityById(workplaceId);
+
+        val userRights = createDefaultUserRights(userId, workplaceId);
+        val notificationRights = createDefaultNotificationEntity(userId, workplaceId);
+
+        if (workplace.getAdminId().equals(userId)) {
+            userRights.setChangeRights(true);
+        }
+
+        notificationsRightsRepository.save(notificationRights);
+        userRightsRepository.save(userRights);
 
         if (!user.getUserWorkplaces().contains(workplace)) {
             user.getUserWorkplaces().add(workplace);
@@ -83,5 +94,43 @@ public class WorkplaceServiceImpl implements WorkplaceService {
         val label = labelRepository.findLabelEntityById(labelId);
         label.setWorkplaceEntity(null);
         labelRepository.delete(label);
+    }
+
+    private UserRightsEntity createDefaultUserRights(Long userId, Long workplaceId) {
+        val rights = new UserRightsEntity();
+
+        rights.setUserEntity(setUser(userId));
+        rights.setWorkplaceEntity(setWorkplace(workplaceId));
+        rights.setAddToWorkplace(false);
+        rights.setArchiveElement(true);
+        rights.setChangeRights(false);
+        rights.setRemoveFromWorkplace(false);
+
+        return rights;
+    }
+
+    private NotificationRightsEntity createDefaultNotificationEntity(Long userId, Long workplaceId) {
+        val rights = new NotificationRightsEntity();
+
+        rights.setDueDate(true);
+        rights.setAddedToElement(true);
+        rights.setSentMessage(true);
+        rights.setRemovedFromElement(true);
+        rights.setUserEntity(setUser(userId));
+        rights.setWorkplaceEntity(setWorkplace(workplaceId));
+
+        return rights;
+    }
+
+    private UserEntity setUser(Long userId) {
+        val user = new UserEntity();
+        user.setId(userId);
+        return user;
+    }
+
+    private WorkplaceEntity setWorkplace(Long workplaceId) {
+        val workplace = new WorkplaceEntity();
+        workplace.setId(workplaceId);
+        return workplace;
     }
 }
