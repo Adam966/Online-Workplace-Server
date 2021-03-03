@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import static com.kosickaakademia.onlineworkplaceserver.security.SecurityConstants.SIGN_IN_URL;
 import static com.kosickaakademia.onlineworkplaceserver.security.SecurityConstants.SIGN_UP_URL;
 
 @EnableWebSecurity
@@ -28,7 +29,9 @@ public class AuthorizationConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-                .anyRequest().authenticated()
+                .antMatchers(HttpMethod.POST, SIGN_IN_URL).permitAll()
+//              .antMatchers("/api/**").authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userRepository))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager()))
