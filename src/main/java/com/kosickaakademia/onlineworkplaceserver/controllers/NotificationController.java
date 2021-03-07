@@ -32,8 +32,8 @@ public class NotificationController {
     SseEmitter streamNotifications(@PathVariable Long userId, @PathVariable Long workplaceId) {
         SseEmitter emitter = new SseEmitter();
         ExecutorService sseMvcExecutor = Executors.newSingleThreadExecutor();
-        //val notifications = notificationService.getNewNotifications(workplaceId, userId);
-        val notifications = setDummyData();
+        val notifications = notificationService.getNewNotifications(workplaceId, userId);
+        //val notifications = setDummyData();
 
         sseMvcExecutor.execute(() -> {
             try {
