@@ -26,11 +26,7 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
 
     @Override
     public List<WorkplaceElementEntity> getAllElements(Long workplaceId) {
-        List<WorkplaceElementEntity> list = new ArrayList<>();
-        list.addAll(noteRepository.getAllByWorkplaceEntityIdAndArchivedLike(workplaceId, true));
-        list.addAll(threadRepository.getAllByWorkplaceEntityIdAndArchivedLike(workplaceId, true));
-        list.addAll(checkListRepository.getAllByWorkplaceEntityIdAndArchivedLike(workplaceId, true));
-        return list;
+        return workplaceElementRepository.findAllByWorkplaceEntityIdAndArchivedIsFalse(workplaceId);
     }
 
     @Override
@@ -71,7 +67,7 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
 
     @Override
     public void archiveElement(Long elementId) {
-        val element = workplaceElementRepository.findWorkplaceElementEntityBy(elementId);
+        val element = workplaceElementRepository.findWorkplaceElementEntityById(elementId);
         element.setArchived(true);
     }
 

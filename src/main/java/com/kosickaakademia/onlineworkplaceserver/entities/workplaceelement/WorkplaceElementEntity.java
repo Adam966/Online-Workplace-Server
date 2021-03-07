@@ -36,7 +36,7 @@ public class WorkplaceElementEntity {
 
     protected String name;
     protected Date creationTime;
-    protected boolean isArchived;
+    protected boolean archived;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
