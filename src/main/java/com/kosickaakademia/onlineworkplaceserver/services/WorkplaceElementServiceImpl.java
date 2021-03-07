@@ -70,8 +70,9 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
     }
 
     @Override
-    public void archiveElement(Long elementId, WorkplaceElementEntity workplaceElementEntity) {
-
+    public void archiveElement(Long elementId) {
+        val element = workplaceElementRepository.findWorkplaceElementEntityBy(elementId);
+        element.setArchived(true);
     }
 
     @Override

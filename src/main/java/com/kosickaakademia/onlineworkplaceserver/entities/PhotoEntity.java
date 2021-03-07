@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "workplace_photo")
+@Table(name = "photo")
 public class PhotoEntity {
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)

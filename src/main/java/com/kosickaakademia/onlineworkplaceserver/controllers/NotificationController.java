@@ -75,7 +75,7 @@ public class NotificationController {
                                     "Adam",
                                     "Ivan",
                                    "adam.ivan@kosickaakademia.sk",
-                                    1L
+                                    null
                             )
                     ).build();
 
