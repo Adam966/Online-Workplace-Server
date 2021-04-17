@@ -4,6 +4,8 @@ alter table element_label drop foreign key FKn7fybwujxv4jjutw0qxwprg2j
 alter table element_label drop foreign key FK8es27ub5hf98odfgn5f3rusoy
 alter table element_user drop foreign key FKdnocsxly6gidy5vd4j4u5w4lr
 alter table element_user drop foreign key FKq5xv7tvaeonsre1wqysal6ii9
+alter table message drop foreign key FK80flimpheqbm2ex5r6ng1iodk
+alter table message drop foreign key FKmasr8ptper09kokw8gqsw5t
 alter table notification drop foreign key FKgtksickis1kjl98281hxsqsc0
 alter table notification drop foreign key FKpgwrwgy6jhyjmhba4scyk9ug9
 alter table notification drop foreign key FKi5oqlq9byodr5ki8mrdgqdma3
@@ -22,32 +24,34 @@ drop table if exists checklist_task
 drop table if exists element_label
 drop table if exists element_user
 drop table if exists label
+drop table if exists message
 drop table if exists notification
 drop table if exists notification_rights
+drop table if exists photo
 drop table if exists task
 drop table if exists task_user
 drop table if exists user
 drop table if exists user_rights
 drop table if exists workplace
 drop table if exists workplace_label
-drop table if exists workplace_photo
 drop table if exists workplace_user
 drop table if exists workplace_element_entity
 create table checklist_task (checklist_id bigint not null, task_id bigint not null) engine=InnoDB
 create table element_label (element_id bigint not null, label_id bigint not null) engine=InnoDB
 create table element_user (element_id bigint not null, user_id bigint not null) engine=InnoDB
 create table label (id bigint not null auto_increment, color varchar(255), name varchar(255), primary key (id)) engine=InnoDB
+create table message (id bigint not null auto_increment, description varchar(255), timestamp datetime(6), sender_user_id bigint, thread_id bigint, primary key (id)) engine=InnoDB
 create table notification (id bigint not null auto_increment, creation_time datetime(6), description varchar(255), fresh bit not null, type integer, recipient_user_id bigint, sender_user_id bigint, workplace_entity_id bigint, primary key (id)) engine=InnoDB
 create table notification_rights (id bigint not null auto_increment, added_to_element bit not null, due_date bit not null, removed_from_element bit not null, sent_message bit not null, user_entity_id bigint, workplace_entity_id bigint, primary key (id)) engine=InnoDB
+create table photo (id bigint not null auto_increment, picture longblob, primary key (id)) engine=InnoDB
 create table task (id bigint not null auto_increment, description varchar(255), is_completed bit not null, primary key (id)) engine=InnoDB
 create table task_user (user_id bigint not null, task_id bigint not null) engine=InnoDB
 create table user (id bigint not null auto_increment, email varchar(255), password varchar(255), photo bigint, user_name varchar(255), user_surname varchar(255), primary key (id)) engine=InnoDB
 create table user_rights (id bigint not null auto_increment, add_to_workplace bit not null, archive_element bit not null, change_rights bit not null, remove_from_workplace bit not null, user_entity_id bigint, workplace_entity_id bigint, primary key (id)) engine=InnoDB
 create table workplace (id bigint not null auto_increment, admin_id bigint, background_color varchar(255), color_of_element varchar(255), description varchar(255), name varchar(255), photo bigint, primary key (id)) engine=InnoDB
 create table workplace_label (workplace_id bigint, label_id bigint not null, primary key (label_id)) engine=InnoDB
-create table workplace_photo (id bigint not null auto_increment, picture longblob, primary key (id)) engine=InnoDB
 create table workplace_user (user_id bigint not null, workplace_id bigint not null) engine=InnoDB
-create table workplace_element_entity (type varchar(31) not null, id bigint not null auto_increment, creation_time datetime(6), is_archived bit not null, name varchar(255), description varchar(255), due_date datetime(6), workplace_entity_id bigint, primary key (id)) engine=InnoDB
+create table workplace_element_entity (type varchar(31) not null, id bigint not null auto_increment, archived bit not null, creation_time datetime(6), name varchar(255), description varchar(255), due_date datetime(6), workplace_entity_id bigint, primary key (id)) engine=InnoDB
 alter table checklist_task add constraint UK_q3exo5sijd615hgchmqxl4q1a unique (task_id)
 alter table user add constraint UK_ob8kqyqqgmefl0aco34akdtpe unique (email)
 alter table checklist_task add constraint FKfn3eh9xnv9f4xl2mjesd66qjb foreign key (task_id) references task (id)
@@ -56,6 +60,8 @@ alter table element_label add constraint FKn7fybwujxv4jjutw0qxwprg2j foreign key
 alter table element_label add constraint FK8es27ub5hf98odfgn5f3rusoy foreign key (element_id) references workplace_element_entity (id)
 alter table element_user add constraint FKdnocsxly6gidy5vd4j4u5w4lr foreign key (user_id) references user (id)
 alter table element_user add constraint FKq5xv7tvaeonsre1wqysal6ii9 foreign key (element_id) references workplace_element_entity (id)
+alter table message add constraint FK80flimpheqbm2ex5r6ng1iodk foreign key (sender_user_id) references user (id)
+alter table message add constraint FKmasr8ptper09kokw8gqsw5t foreign key (thread_id) references workplace_element_entity (id)
 alter table notification add constraint FKgtksickis1kjl98281hxsqsc0 foreign key (recipient_user_id) references user (id)
 alter table notification add constraint FKpgwrwgy6jhyjmhba4scyk9ug9 foreign key (sender_user_id) references user (id)
 alter table notification add constraint FKi5oqlq9byodr5ki8mrdgqdma3 foreign key (workplace_entity_id) references workplace (id)
