@@ -48,4 +48,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         return new User(user.getEmail(), user.getPassword(), Collections.emptyList());
     }
+
+    public void changeEmail(Long userId, String email) {
+        val user = userRepository.findUserEntityById(userId);
+        user.setEmail(email);
+        userRepository.save(user);
+    }
 }
