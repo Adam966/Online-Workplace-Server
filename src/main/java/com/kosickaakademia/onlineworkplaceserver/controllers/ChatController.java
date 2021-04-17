@@ -29,6 +29,12 @@ public class ChatController {
         return message;
     }
 
+    @MessageMapping("/notify/{threadId}")
+    @SendTo("/notify/thread/{threadId}")
+    public boolean getNotifyTyping(@Payload boolean isTyping, @DestinationVariable String threadId) {
+       return isTyping;
+    }
+
     @GetMapping(GET_OLD_MESSAGES)
     public ResponseEntity<List<MessageDTO>> getOldMessages(@PathVariable String threadId) {
         return ResponseEntity.ok(chatService.getMessages(Long.parseLong(threadId)));
