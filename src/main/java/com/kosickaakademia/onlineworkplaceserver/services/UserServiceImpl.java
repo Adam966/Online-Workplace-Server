@@ -54,4 +54,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setEmail(email);
         userRepository.save(user);
     }
+
+    public void changePassword(Long userId, String password) {
+        val user = userRepository.findUserEntityById(userId);
+        user.setPassword(bCryptPasswordEncoder.encode(password));
+        userRepository.save(user);
+    }
 }

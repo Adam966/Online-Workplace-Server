@@ -17,6 +17,7 @@ public class UserController {
     private static final String REGISTER = "register";
     private static final String FIND_USER = "users";
     private static final String CHANGE_EMAIL = "change-email/user/{userId}";
+    private static final String CHANGE_PASSWORD = "change-password/user/{userId}";
 
     public UserController(UserServiceImpl userServiceImpl) {
         this.userService = userServiceImpl;
@@ -37,4 +38,8 @@ public class UserController {
         userService.changeEmail(userId, email);
     }
 
+    @PostMapping(CHANGE_PASSWORD)
+    public void changePassword(@PathVariable Long userId, @RequestBody String password) {
+        userService.changePassword(userId, password);
+    }
 }
