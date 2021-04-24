@@ -69,10 +69,15 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
     public void archiveElement(Long elementId) {
         val element = workplaceElementRepository.findWorkplaceElementEntityById(elementId);
         element.setArchived(true);
+        workplaceElementRepository.save(element);
     }
 
     @Override
     public List<WorkplaceElementEntity> getAllArchivedElements(Long workplaceId) {
-        return null;
+        return workplaceElementRepository.findAllByWorkplaceEntityIdAndArchivedIsTrue(workplaceId);
+    }
+
+    public void getRoles(Principal authentication) {
+        System.out.println(authentication);
     }
 }
