@@ -6,11 +6,11 @@ import com.kosickaakademia.onlineworkplaceserver.entities.MessageEntity;
 import com.kosickaakademia.onlineworkplaceserver.entities.UserEntity;
 import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.WorkplaceElementEntity;
 import com.kosickaakademia.onlineworkplaceserver.repositories.MessageRepository;
+import javassist.NotFoundException;
 import lombok.val;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +28,14 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<MessageDTO> getMessages(Long threadId) {
-        val pageRequest = PageRequest.of(0, 25);
-        return messageRepository.getAllByThreadId(threadId, pageRequest)
+    public List<MessageDTO> getMessages(Long threadId, String pageNumber) throws NotFoundException {
+        val pageRequest = PageRequest.of(Integer.parseInt(pageNumber), 25);
+        val page = messageRepository.getAllByThreadIdOrderByIdDesc(threadId, pageRequest);
+        if (page.getTotalPages() < Integer.parseInt(pageNumber)) {
+            throw new NotFoundException("Page number doesn't exists");
+        }
+
+        return page
                 .stream()
                 .map(this::mapMessageEntityToMessageDTO)
                 .collect(Collectors.toList());
