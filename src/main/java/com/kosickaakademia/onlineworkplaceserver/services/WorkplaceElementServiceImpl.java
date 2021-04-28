@@ -77,6 +77,11 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
         return workplaceElementRepository.findAllByWorkplaceEntityIdAndArchivedIsTrue(workplaceId);
     }
 
+    @Override
+    public WorkplaceElementEntity getUsersOfElement(Long elementId) {
+        return workplaceElementRepository.findWorkplaceElementEntityById(elementId);
+    }
+
     public void getRoles(Principal authentication) {
         System.out.println(authentication);
     }

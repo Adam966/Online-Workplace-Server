@@ -6,8 +6,10 @@ import com.kosickaakademia.onlineworkplaceserver.entities.WorkplaceEntity;
 import com.kosickaakademia.onlineworkplaceserver.exceptions.DuplicateUserException;
 import com.kosickaakademia.onlineworkplaceserver.services.WorkplaceServiceImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController()
@@ -30,8 +32,12 @@ public class WorkplaceController {
     }
 
     @GetMapping(WORKPLACES)
-    ResponseEntity<List<WorkplaceEntity>> getAllWorkplaces(@RequestParam(name = "userId") Long id) {
-        return ResponseEntity.ok(workplaceService.getAllUserWorkplace(id));
+    ResponseEntity<List<WorkplaceEntity>> getAllWorkplaces(@RequestParam(name = "userId") Long id, Principal principal) {
+        if (id.toString().equals(principal.getName())) {
+            return ResponseEntity.ok(workplaceService.getAllUserWorkplace(id));
+        } else {
+            throw new AccessDeniedException("You don't have right to see this.");
+        }
     }
 
     @PostMapping(WORKPLACE)
