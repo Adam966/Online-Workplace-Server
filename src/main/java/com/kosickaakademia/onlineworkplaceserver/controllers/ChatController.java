@@ -2,6 +2,7 @@ package com.kosickaakademia.onlineworkplaceserver.controllers;
 
 import com.kosickaakademia.onlineworkplaceserver.dto.MessageDTO;
 import com.kosickaakademia.onlineworkplaceserver.services.ChatServiceImpl;
+import com.kosickaakademia.onlineworkplaceserver.services.NotificationServiceImpl;
 import javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ public class ChatController {
     @SendTo("/message/thread/{threadId}")
     public MessageDTO getNewMessage(@Payload MessageDTO message, @DestinationVariable String threadId) {
         chatService.addNewMessage(message, threadId);
+        chatService.sendNotifications(Long.parseLong(threadId), message.getSenderUser());
         return message;
     }
 
