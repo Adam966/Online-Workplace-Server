@@ -50,6 +50,7 @@ public class WorkplaceServiceImpl implements WorkplaceService {
 
         if (workplace.getAdminId().equals(userId)) {
             userRights.setChangeRights(true);
+            userRights.setAddToWorkplace(true);
         }
 
         notificationsRightsRepository.save(notificationRights);

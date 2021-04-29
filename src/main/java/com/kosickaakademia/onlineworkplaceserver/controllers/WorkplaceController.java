@@ -6,10 +6,9 @@ import com.kosickaakademia.onlineworkplaceserver.entities.WorkplaceEntity;
 import com.kosickaakademia.onlineworkplaceserver.exceptions.DuplicateUserException;
 import com.kosickaakademia.onlineworkplaceserver.services.WorkplaceServiceImpl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController()
@@ -31,13 +30,10 @@ public class WorkplaceController {
         this.workplaceService = workplaceService;
     }
 
+    @PreAuthorize("@securityService.isUserSameAsRequested(#id)")
     @GetMapping(WORKPLACES)
-    ResponseEntity<List<WorkplaceEntity>> getAllWorkplaces(@RequestParam(name = "userId") Long id, Principal principal) {
-        if (id.toString().equals(principal.getName())) {
-            return ResponseEntity.ok(workplaceService.getAllUserWorkplace(id));
-        } else {
-            throw new AccessDeniedException("You don't have right to see this.");
-        }
+    ResponseEntity<List<WorkplaceEntity>> getAllWorkplaces(@RequestParam(name = "userId") Long id) {
+        return ResponseEntity.ok(workplaceService.getAllUserWorkplace(id));
     }
 
     @PostMapping(WORKPLACE)
@@ -45,11 +41,13 @@ public class WorkplaceController {
         return ResponseEntity.ok(workplaceService.addWorkplace(workplaceEntity));
     }
 
+    @PreAuthorize("@securityService.isUserInWorkplace(#workplaceId)")
     @DeleteMapping(DELETE_WORKPLACE_USER)
     void deleteUserFromWorkplace(@PathVariable Long workplaceId, @PathVariable Long userId) {
         workplaceService.deleteUser(userId, workplaceId);
     }
 
+    @PreAuthorize("@securityService.checkUserRightsToAdd(#userId, #workplaceId)")
     @PostMapping(ADD_WORKPLACE_USER)
     void addUserToWorkplace(@PathVariable Long workplaceId, @PathVariable Long userId) {
         try {
@@ -59,21 +57,25 @@ public class WorkplaceController {
         }
     }
 
+    @PreAuthorize("@securityService.isUserInWorkplace(#workplaceId)")
     @GetMapping(GET_WORKPLACE_USERS)
     ResponseEntity<List<UserDTO>> getAllWorkplaceUsers(@PathVariable Long workplaceId) {
         return ResponseEntity.ok(workplaceService.getAllUsers(workplaceId));
     }
 
+    @PreAuthorize("@securityService.isUserInWorkplace(#workplaceId)")
     @GetMapping(GET_WORKPLACE_LABELS)
     ResponseEntity<List<LabelEntity>> getAllWorkplaceLabels(@PathVariable Long workplaceId) {
         return ResponseEntity.ok(workplaceService.getAllLabels(workplaceId));
     }
 
+    @PreAuthorize("@securityService.isUserInWorkplace(#workplaceId)")
     @PostMapping(ADD_WORKPLACE_LABEL)
     ResponseEntity<LabelEntity> addLabelToWorkplace(@RequestBody LabelEntity labelEntity, @PathVariable Long workplaceId) {
         return ResponseEntity.ok(workplaceService.addLabel(labelEntity, workplaceId));
     }
 
+    @PreAuthorize("@securityService.isUserInWorkplace(#workplaceId)")
     @DeleteMapping(DELETE_WORKPLACE_LABEL)
     void deleteLabelFromWorkplace(@PathVariable Long workplaceId, @PathVariable Long labelId) {
         workplaceService.deleteLabel(workplaceId, labelId);
