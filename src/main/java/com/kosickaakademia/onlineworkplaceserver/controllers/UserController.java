@@ -2,11 +2,10 @@ package com.kosickaakademia.onlineworkplaceserver.controllers;
 
 import com.kosickaakademia.onlineworkplaceserver.dto.UserDTO;
 import com.kosickaakademia.onlineworkplaceserver.entities.UserEntity;
-import com.kosickaakademia.onlineworkplaceserver.exceptions.UserException;
 import com.kosickaakademia.onlineworkplaceserver.services.UserServiceImpl;
 
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,11 +32,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsersByEmail(email));
     }
 
+    @PreAuthorize("@securityService.isUserSameAsRequested(#userId)")
     @PostMapping(CHANGE_EMAIL)
     public void changeEmail(@PathVariable Long userId, @RequestBody String email) {
         userService.changeEmail(userId, email);
     }
 
+    @PreAuthorize("@securityService.isUserSameAsRequested(#userId)")
     @PostMapping(CHANGE_PASSWORD)
     public void changePassword(@PathVariable Long userId, @RequestBody String password) {
         userService.changePassword(userId, password);

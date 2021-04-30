@@ -7,6 +7,7 @@ import com.kosickaakademia.onlineworkplaceserver.entities.NotificationRightsEnti
 import com.kosickaakademia.onlineworkplaceserver.entities.UserRightsEntity;
 import com.kosickaakademia.onlineworkplaceserver.services.UserRightsServiceImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class RightsController {
         this.userRightsService = userRightsService;
     }
 
+    @PreAuthorize("@securityService.isUserInWorkplace(#workplaceId)")
     @GetMapping(USER_RIGHTS)
     private ResponseEntity<RightsDTO> getUserRights(@PathVariable Long workplaceId, @PathVariable Long userId) {
         return ResponseEntity.ok(userRightsService.getUserRights(workplaceId, userId));
@@ -31,6 +33,7 @@ public class RightsController {
         return ResponseEntity.ok(userRightsService.addUserRights(workplaceId, userId, userRightsEntity));
     }
 
+    @PreAuthorize("@securityService.isUserSameAsRequested(#workplaceId)")
     @PutMapping(ADD_NOTIFICATION_RIGHTS)
     private ResponseEntity<NotificationsRightsDTO> addNotificationRights(@PathVariable Long workplaceId, @PathVariable Long userId, @RequestBody NotificationRightsEntity notificationRightsEntity) {
         return ResponseEntity.ok(userRightsService.addNotificationRights(workplaceId, userId, notificationRightsEntity));

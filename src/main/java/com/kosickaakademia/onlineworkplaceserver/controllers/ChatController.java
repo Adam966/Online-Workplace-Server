@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Controller
 public class ChatController {
-    private static final String GET_OLD_MESSAGES = "thread/{threadId}";
+    private static final String GET_OLD_MESSAGES = "workplace/{workplaceId}/thread/{threadId}";
     private final ChatServiceImpl chatService;
 
     public ChatController(ChatServiceImpl chatService) {
@@ -35,14 +36,15 @@ public class ChatController {
         return message;
     }
 
-    @MessageMapping("/notify/{threadId}")
-    @SendTo("/notify/thread/{threadId}")
-    public boolean getNotifyTyping(@Payload boolean isTyping, @DestinationVariable String threadId) {
-        return isTyping;
-    }
+//    @MessageMapping("/notify/{threadId}")
+//    @SendTo("/notify/thread/{threadId}")
+//    public boolean getNotifyTyping(@Payload boolean isTyping, @DestinationVariable String threadId) {
+//        return isTyping;
+//    }
 
+    @PreAuthorize("@securityService.isUserInWorkplace(#workplaceId)")
     @GetMapping(GET_OLD_MESSAGES)
-    public ResponseEntity<List<MessageDTO>> getOldMessages(@PathVariable String threadId, @RequestParam String page) {
+    public ResponseEntity<List<MessageDTO>> getOldMessages(@PathVariable String threadId, @PathVariable Long workplaceId,@RequestParam String page) {
         try {
             return ResponseEntity.ok(chatService.getMessages(Long.parseLong(threadId), page));
         } catch (NotFoundException exception) {

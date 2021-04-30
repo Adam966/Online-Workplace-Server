@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<NotificationEntity, Long> {
-    List<NotificationEntity> getAllByFreshTrueAndAndWorkplaceEntityIdAndRecipientUserId(Long workplaceId, Long userId);
+    List<NotificationEntity> getAllByFreshTrueAndWorkplaceEntityIdAndRecipientUserId(Long workplaceId, Long userId);
     Page<NotificationEntity> getAllByWorkplaceEntityIdAndRecipientUserId(Long workplaceId, Long userId, Pageable pageRequest);
 }

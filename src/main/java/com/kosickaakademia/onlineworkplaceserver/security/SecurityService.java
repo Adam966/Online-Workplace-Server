@@ -40,4 +40,11 @@ public class SecurityService {
         Principal principal = SecurityContextHolder.getContext().getAuthentication();
         return requestedUserId == Long.parseLong(principal.getName());
     }
+
+    public boolean checkUserRightToArchive(Long workplaceId) {
+        Principal principal = SecurityContextHolder.getContext().getAuthentication();
+        val rights = userRightsRepository
+                .getUserRightsEntityByWorkplaceEntityIdAndUserEntityId(workplaceId, Long.parseLong(principal.getName()));
+        return rights.isArchiveElement();
+    }
 }
