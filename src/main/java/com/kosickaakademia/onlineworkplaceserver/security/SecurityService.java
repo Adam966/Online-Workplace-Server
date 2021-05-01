@@ -47,4 +47,11 @@ public class SecurityService {
                 .getUserRightsEntityByWorkplaceEntityIdAndUserEntityId(workplaceId, Long.parseLong(principal.getName()));
         return rights.isArchiveElement();
     }
+
+    public boolean checkUserRightToChangeRights(Long workplaceId) {
+        Principal principal = SecurityContextHolder.getContext().getAuthentication();
+        val rights = userRightsRepository
+                .getUserRightsEntityByWorkplaceEntityIdAndUserEntityId(workplaceId, Long.parseLong(principal.getName()));
+        return rights.isChangeRights();
+    }
 }

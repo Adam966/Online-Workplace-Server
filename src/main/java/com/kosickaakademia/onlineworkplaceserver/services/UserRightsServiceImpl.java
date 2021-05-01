@@ -12,6 +12,9 @@ import com.kosickaakademia.onlineworkplaceserver.repositories.UserRightsReposito
 import lombok.val;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserRightsServiceImpl implements UserRightsService {
     private final UserRightsRepository userRightsRepository;
@@ -58,6 +61,14 @@ public class UserRightsServiceImpl implements UserRightsService {
         return mapNotificationsRightsEntityToDTO(notificationsRightsRepository.save(notificationRightsEntity));
     }
 
+    @Override
+    public List<UserRightsDTO> getAllUserRights(Long workplaceId) {
+        return userRightsRepository.getAllByWorkplaceEntityId(workplaceId)
+                .stream()
+                .map(this::mapRightsEntityToDTO)
+                .collect(Collectors.toList());
+    }
+
     private UserRightsDTO mapRightsEntityToDTO(UserRightsEntity userRightsEntity) {
         return UserRightsDTO.builder()
                 .id(userRightsEntity.getId())
@@ -65,6 +76,7 @@ public class UserRightsServiceImpl implements UserRightsService {
                 .removeFromWorkplace(userRightsEntity.isRemoveFromWorkplace())
                 .archiveElement(userRightsEntity.isArchiveElement())
                 .addToWorkplace(userRightsEntity.isAddToWorkplace())
+                .userId(userRightsEntity.getId())
                 .build();
 
     }
