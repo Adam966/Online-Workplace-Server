@@ -11,4 +11,5 @@ public class UserRightsDTO {
     private boolean addToWorkplace;
     private boolean archiveElement;
     private boolean changeRights;
+    private Long userId;
 }

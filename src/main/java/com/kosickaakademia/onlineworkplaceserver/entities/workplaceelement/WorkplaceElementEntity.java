@@ -45,7 +45,7 @@ public class WorkplaceElementEntity {
             inverseJoinColumns = @JoinColumn(name = "label_id"))
     private List<LabelEntity> assignedLabels;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "element_user",
             joinColumns = @JoinColumn(name = "element_id"),

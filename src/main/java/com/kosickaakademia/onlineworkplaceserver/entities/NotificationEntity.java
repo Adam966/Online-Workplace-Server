@@ -22,13 +22,13 @@ public class NotificationEntity {
     @CreationTimestamp
     private Date creationTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private WorkplaceEntity workplaceEntity;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private UserEntity senderUser;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private UserEntity recipientUser;
 }
 

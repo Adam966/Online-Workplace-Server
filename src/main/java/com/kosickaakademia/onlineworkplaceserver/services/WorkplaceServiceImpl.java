@@ -17,13 +17,15 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     private final LabelRepository labelRepository;
     private final UserRightsRepository userRightsRepository;
     private final NotificationsRightsRepository notificationsRightsRepository;
+    private final WorkplaceElementRepository workplaceElementRepository;
 
-    public WorkplaceServiceImpl(WorkplaceRepository workplaceRepository, UserRepository userRepository, LabelRepository labelRepository, UserRightsRepository userRightsRepository, NotificationsRightsRepository notificationsRightsRepository) {
+    public WorkplaceServiceImpl(WorkplaceRepository workplaceRepository, UserRepository userRepository, LabelRepository labelRepository, UserRightsRepository userRightsRepository, NotificationsRightsRepository notificationsRightsRepository, WorkplaceElementRepository workplaceElementRepository) {
         this.workplaceRepository = workplaceRepository;
         this.userRepository = userRepository;
         this.labelRepository = labelRepository;
         this.userRightsRepository = userRightsRepository;
         this.notificationsRightsRepository = notificationsRightsRepository;
+        this.workplaceElementRepository = workplaceElementRepository;
     }
 
     @Override
@@ -48,6 +50,8 @@ public class WorkplaceServiceImpl implements WorkplaceService {
 
         if (workplace.getAdminId().equals(userId)) {
             userRights.setChangeRights(true);
+            userRights.setAddToWorkplace(true);
+            userRights.setRemoveFromWorkplace(true);
         }
 
         notificationsRightsRepository.save(notificationRights);
@@ -74,6 +78,15 @@ public class WorkplaceServiceImpl implements WorkplaceService {
         val user = userRepository.findUserEntityById(userId);
         user.getUserWorkplaces().removeIf(workplaceEntity -> workplaceEntity.getId().equals(workplaceId));
         userRepository.save(user);
+
+        val list = workplaceElementRepository.findAllByWorkplaceEntityId(workplaceId);
+
+        list.forEach((element) -> {
+            if (element.getAssignedUsers().contains(user)) {
+                element.getAssignedUsers().remove(user);
+                workplaceElementRepository.save(element);
+            }
+        });
     }
 
     @Override
@@ -92,6 +105,19 @@ public class WorkplaceServiceImpl implements WorkplaceService {
     @Override
     public void deleteLabel(Long workplaceId, Long labelId) {
         val label = labelRepository.findLabelEntityById(labelId);
+        val workplace = workplaceRepository.getWorkplaceEntityById(workplaceId);
+        workplace.getWorkplaceLabels().remove(label);
+        workplaceRepository.save(workplace);
+
+        val list = workplaceElementRepository.findAllByWorkplaceEntityId(workplaceId);
+
+        list.forEach((element) -> {
+            if (element.getAssignedLabels().contains(label)) {
+                element.getAssignedLabels().remove(label);
+                workplaceElementRepository.save(element);
+            }
+        });
+
         label.setWorkplaceEntity(null);
         labelRepository.delete(label);
     }

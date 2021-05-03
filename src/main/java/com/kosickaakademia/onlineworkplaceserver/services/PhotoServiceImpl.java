@@ -31,7 +31,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public void saveWorkplacePhoto(byte[] photo, Long workplaceId) {
-        val workplace = workplaceRepository.getOne(workplaceId);
+        val workplace = workplaceRepository.getWorkplaceEntityById(workplaceId);
         val entity = new PhotoEntity();
         entity.setPicture(photo);
         val savedPhoto = photoRepository.save(entity);

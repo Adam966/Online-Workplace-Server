@@ -6,7 +6,6 @@ import com.kosickaakademia.onlineworkplaceserver.entities.workplaceelement.Workp
 import com.kosickaakademia.onlineworkplaceserver.repositories.*;
 import lombok.val;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +33,7 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
         val workplace = workplaceRepository.getWorkplaceEntityById(workplaceId);
 
         if(workplaceElementEntity instanceof CheckListEntity) {
-            for (TaskEntity taskEntity: ((CheckListEntity) workplaceElementEntity).getTaskEntities()){
+            for (TaskEntity taskEntity: ((CheckListEntity) workplaceElementEntity).getTaskEntities()) {
                 val users = taskEntity.getAssignedUsers()
                         .stream().map(userEntity -> userRepository.findUserEntityById(userEntity.getId()))
                         .collect(Collectors.toList());
@@ -43,7 +42,6 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
                 taskEntity.setAssignedUsers(users);
             }
         }
-
 
         if (workplaceElementEntity.getAssignedUsers() != null) {
             val users = workplaceElementEntity.getAssignedUsers()
@@ -69,10 +67,16 @@ public class WorkplaceElementServiceImpl implements WorkplaceElementService {
     public void archiveElement(Long elementId) {
         val element = workplaceElementRepository.findWorkplaceElementEntityById(elementId);
         element.setArchived(true);
+        workplaceElementRepository.save(element);
     }
 
     @Override
     public List<WorkplaceElementEntity> getAllArchivedElements(Long workplaceId) {
-        return null;
+        return workplaceElementRepository.findAllByWorkplaceEntityIdAndArchivedIsTrue(workplaceId);
+    }
+
+    @Override
+    public WorkplaceElementEntity getUsersOfElement(Long elementId) {
+        return workplaceElementRepository.findWorkplaceElementEntityById(elementId);
     }
 }

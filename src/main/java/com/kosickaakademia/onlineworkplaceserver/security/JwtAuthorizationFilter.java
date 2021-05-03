@@ -42,13 +42,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
 
-            String user = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
+            String userId = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
                     .build()
                     .verify(token.replace(TOKEN_PREFIX, ""))
                     .getSubject();
 
-            if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            if (userId != null) {
+                return new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
             }
             return null;
         }

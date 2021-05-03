@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface WorkplaceElementRepository extends JpaRepository<WorkplaceElementEntity, Long> {
     List<WorkplaceElementEntity> findAllByWorkplaceEntityIdAndArchivedIsFalse(Long workplaceId);
+    List<WorkplaceElementEntity> findAllByWorkplaceEntityIdAndArchivedIsTrue(Long workplaceId);
     WorkplaceElementEntity findWorkplaceElementEntityById(Long elementID);
+    List<WorkplaceElementEntity> findAllByWorkplaceEntityId(Long workplaceId);
 }
